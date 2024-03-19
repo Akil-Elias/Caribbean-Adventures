@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getFirestore, collection, getDocs } from "firebase/firestore"
 
 
 const {
@@ -24,5 +24,22 @@ const firebaseConfig = {
   
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+initializeApp(firebaseConfig);
+
+// Initialize database
+const db = getFirestore()
+
+// Collection ref
+const colRef = collection(db, "countries")
+
+//Collection data
+getDocs(colRef)
+  .then((snapshot) => {
+    let countries = [];
+    snapshot.docs.forEach((doc) => {
+      countries.push({ ...doc.data(), id: doc.id})
+    })
+    console.log(countries)
+  })
+
+export { colRef, getDocs}
